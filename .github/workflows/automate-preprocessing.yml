@@ -2,10 +2,8 @@ name: Automate Preprocessing
 
 on:
   push:
-    branches: [ main, master ]
-    paths:
-      - 'dataset/**'
-      - 'automate_Muhamad-Saefuloh.py'
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -22,24 +20,13 @@ jobs:
           python-version: "3.9"
 
       - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install pandas numpy scikit-learn
+        run: pip install pandas numpy scikit-learn
 
-      - name: Run preprocessing script
-        run: |
-          python automate_Muhamad-Saefuloh.py
+      - name: Run preprocessing
+        run: python automate_Muhamad-Saefuloh.py
 
-      - name: Upload preprocessed dataset as artifact
+      - name: Upload hasil preprocessing
         uses: actions/upload-artifact@v3
         with:
           name: preprocessed-dataset
           path: preprocessed_corn_data.csv
-
-      - name: Commit preprocessed data
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add preprocessed_corn_data.csv
-          git diff --staged --quiet || git commit -m "auto: update preprocessed_corn_data.csv [skip ci]"
-          git push
